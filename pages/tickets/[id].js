@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { auth } from '../../lib/firebase';
-import TicketDetail from '../../components/TicketDetail';
+import { auth } from '@/app/lib/firebase';
+import TicketDetail from '@/app/components/TicketDetail';
 
 export default function EditTicket() {
   const router = useRouter();

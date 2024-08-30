@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, query, onSnapshot, orderBy, where, deleteDoc, doc } from "firebase/firestore";
 import { db, auth } from '../lib/firebase';
+import Link from 'next/link';
 import UserList from './UserList';
 
 export default function TicketList() {
@@ -28,6 +29,17 @@ export default function TicketList() {
     }
   };
 
+  const deleteTicket = async (ticketId) => {
+    if (window.confirm("Are you sure you want to delete this ticket?")) {
+      try {
+        await deleteDoc(doc(db, "tickets", ticketId));
+      } catch (error) {
+        console.error("Error deleting ticket", error);
+      }
+    }    
+
+  }
+
   return (
     <div className="space-y-4">
       {tickets.map(ticket => (
@@ -38,6 +50,18 @@ export default function TicketList() {
           <p>Priority: {ticket.priority}</p>
           <p>Assigned to: {ticket.assignedTo || 'Unassigned'}</p>
           <UserList onSelectUser={(userId) => assignTicket(ticket.id, userId)} />
+
+          <div className="mt-2 space-x-2">
+            <Link legacyBehavior href={`/tickets/${ticket.id}`}>
+              <a className="text-blue-500 hover:underline">Edit</a>
+            </Link>
+            <button 
+              onClick={() => deleteTicket(ticket.id)}
+              className="text-red-500 hover:underline"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       ))}
     </div>
